@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvBienvenida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnGestionarUsuarios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gestionar Usuarios"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnCrearMateria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crear Materia"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnVerMaterias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ver Materias"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnAsignarMateria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Asignar Profesor y Alumnos a Materia"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cerrar Sesión"/>
+
+</LinearLayout>
