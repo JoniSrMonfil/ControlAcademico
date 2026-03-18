@@ -72,6 +72,10 @@ class ProfesorActivity : AppCompatActivity() {
             mostrarHorario()
         }
 
+        binding.btnVerAsistencias.setOnClickListener {
+            mostrarAsistencias()
+        }
+
         binding.btnCerrarSesion.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             prefs.cerrarSesion()
@@ -304,6 +308,103 @@ class ProfesorActivity : AppCompatActivity() {
                     val bmp = android.graphics.BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
                     binding.imgFotoPerfil.setImageBitmap(bmp)
                 }
+            }
+    }
+
+    private fun mostrarAsistencias() {
+        // Primero seleccionar materia
+        db.collection("materias")
+            .whereEqualTo("profesorId", prefs.getUid())
+            .get()
+            .addOnSuccessListener { materias ->
+                if (materias.isEmpty) {
+                    Toast.makeText(this, "No tienes materias asignadas", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+
+                val listaMaterias = materias.documents
+                val nombresMaterias = listaMaterias.map {
+                    it.getString("nombre") ?: "Sin nombre"
+                }.toTypedArray()
+
+                // Opción para ver todas o filtrar por materia
+                val opciones = arrayOf("📚 Todas las materias") + nombresMaterias
+
+                AlertDialog.Builder(this)
+                    .setTitle("Ver asistencias de:")
+                    .setItems(opciones) { _, index ->
+                        if (index == 0) {
+                            // Ver todas
+                            cargarAsistencias(null, "Todas las materias")
+                        } else {
+                            val materiaId = listaMaterias[index - 1].id
+                            val materiaNombre = nombresMaterias[index - 1]
+                            cargarAsistencias(materiaId, materiaNombre)
+                        }
+                    }
+                    .show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al cargar materias", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun cargarAsistencias(materiaId: String?, materiaNombre: String) {
+        val query = if (materiaId != null) {
+            db.collection("asistencias").whereEqualTo("materiaId", materiaId)
+        } else {
+            db.collection("asistencias")
+        }
+
+        query.get()
+            .addOnSuccessListener { docs ->
+                if (docs.isEmpty) {
+                    Toast.makeText(this, "No hay asistencias registradas", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+
+                // Construir lista visual
+                val lista = docs.map { doc ->
+                    val alumno = doc.getString("alumnoNombre") ?: "Desconocido"
+                    val materia = doc.getString("materiaNombre") ?: "Sin materia"
+                    val fecha = doc.getString("fecha") ?: "Sin fecha"
+                    "👤 $alumno\n📚 $materia\n🕐 $fecha"
+                }.toTypedArray()
+
+                // Mostrar en diálogo con scroll
+                val scrollView = android.widget.ScrollView(this)
+                val linearLayout = android.widget.LinearLayout(this)
+                linearLayout.orientation = android.widget.LinearLayout.VERTICAL
+                linearLayout.setPadding(48, 24, 48, 24)
+
+                lista.forEach { item ->
+                    val card = android.widget.TextView(this)
+                    card.text = item
+                    card.textSize = 13f
+                    card.setTextColor(android.graphics.Color.parseColor("#E0E0E0"))
+                    card.setBackgroundColor(android.graphics.Color.parseColor("#16213E"))
+                    card.setPadding(32, 24, 32, 24)
+
+                    val params = android.widget.LinearLayout.LayoutParams(
+                        android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                        android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    params.setMargins(0, 0, 0, 16)
+                    card.layoutParams = params
+
+                    linearLayout.addView(card)
+                }
+
+                scrollView.addView(linearLayout)
+
+                AlertDialog.Builder(this)
+                    .setTitle("Asistencias — $materiaNombre (${lista.size})")
+                    .setView(scrollView)
+                    .setNegativeButton("Cerrar", null)
+                    .show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al cargar asistencias", Toast.LENGTH_SHORT).show()
             }
     }
 
