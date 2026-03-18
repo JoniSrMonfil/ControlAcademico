@@ -257,28 +257,39 @@ class ProfesorActivity : AppCompatActivity() {
     }
     private fun subirFotoFirebase(uri: Uri) {
         val uid = prefs.getUid()
-        val storageRef = FirebaseStorage.getInstance()
-            .reference.child("fotos/$uid.jpg")
 
-        storageRef.putFile(uri)
+        // Convertir imagen a Base64
+        val inputStream = contentResolver.openInputStream(uri)
+        val bytes = inputStream?.readBytes()
+        inputStream?.close()
+
+        if (bytes == null) {
+            Toast.makeText(this, "Error al leer la imagen", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Comprimir — máximo 200KB para Firestore
+        val bitmap = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        val outputStream = java.io.ByteArrayOutputStream()
+        bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 40, outputStream)
+        val base64 = android.util.Base64.encodeToString(
+            outputStream.toByteArray(),
+            android.util.Base64.DEFAULT
+        )
+
+        // Guardar en Firestore
+        FirebaseFirestore.getInstance()
+            .collection("usuarios").document(uid)
+            .update("fotoPerfil", base64)
             .addOnSuccessListener {
-                storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                    // Guardar URL en Firestore
-                    FirebaseFirestore.getInstance()
-                        .collection("usuarios").document(uid)
-                        .update("fotoPerfil", downloadUri.toString())
-                        .addOnSuccessListener {
-                            // Mostrar en la UI
-                            Glide.with(this)
-                                .load(downloadUri)
-                                .circleCrop()
-                                .into(binding.imgFotoPerfil)
-                            Toast.makeText(this, "Foto actualizada", Toast.LENGTH_SHORT).show()
-                        }
-                }
+                // Mostrar en la UI
+                val decoded = android.util.Base64.decode(base64, android.util.Base64.DEFAULT)
+                val bmp = android.graphics.BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+                binding.imgFotoPerfil.setImageBitmap(bmp)
+                Toast.makeText(this, "Foto actualizada", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Error al subir foto", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error al guardar foto", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -287,13 +298,11 @@ class ProfesorActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance()
             .collection("usuarios").document(uid).get()
             .addOnSuccessListener { doc ->
-                val foto = doc.getString("fotoPerfil")
-                if (!foto.isNullOrEmpty()) {
-                    Glide.with(this)
-                        .load(foto)
-                        .circleCrop()
-                        .placeholder(R.mipmap.ic_launcher_round)
-                        .into(binding.imgFotoPerfil)
+                val base64 = doc.getString("fotoPerfil")
+                if (!base64.isNullOrEmpty()) {
+                    val decoded = android.util.Base64.decode(base64, android.util.Base64.DEFAULT)
+                    val bmp = android.graphics.BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+                    binding.imgFotoPerfil.setImageBitmap(bmp)
                 }
             }
     }
