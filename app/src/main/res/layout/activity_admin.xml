@@ -24,10 +24,14 @@
             android:layout_marginBottom="28dp">
 
             <ImageView
+                android:id="@+id/imgFotoPerfil"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
-                android:src="@mipmap/ic_launcher_round"
-                android:layout_marginEnd="14dp"/>
+                android:src="@drawable/ic_perfil_default"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="14dp"
+                android:clickable="true"
+                android:focusable="true"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -18,8 +18,19 @@ import com.example.controlacademico.model.Usuario
 import com.example.controlacademico.prefs.Prefs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
+
 
 class AdminActivity : AppCompatActivity() {
+
+    private val pickImage = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let { subirFotoFirebase(it) }
+    }
 
     private lateinit var binding: ActivityAdminBinding
     private lateinit var db: FirebaseFirestore
@@ -34,6 +45,12 @@ class AdminActivity : AppCompatActivity() {
         prefs = Prefs(this)
 
         binding.tvBienvenida.text = "Admin: ${prefs.getNombre()}"
+
+        cargarFotoPerfil()
+
+        binding.imgFotoPerfil.setOnClickListener {
+            pickImage.launch("image/*")
+        }
 
         binding.btnGestionarUsuarios.setOnClickListener {
             mostrarDialogoUsuarios()
@@ -283,5 +300,47 @@ class AdminActivity : AppCompatActivity() {
                     .show()
             }
     }
+
+    private fun subirFotoFirebase(uri: Uri) {
+        val uid = prefs.getUid()
+        val storageRef = FirebaseStorage.getInstance()
+            .reference.child("fotos/$uid.jpg")
+
+        storageRef.putFile(uri)
+            .addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                    FirebaseFirestore.getInstance()
+                        .collection("usuarios").document(uid)
+                        .update("fotoPerfil", downloadUri.toString())
+                        .addOnSuccessListener {
+                            Glide.with(this)
+                                .load(downloadUri)
+                                .circleCrop()
+                                .into(binding.imgFotoPerfil)
+                            Toast.makeText(this, "Foto actualizada", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al subir foto", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun cargarFotoPerfil() {
+        val uid = prefs.getUid()
+        FirebaseFirestore.getInstance()
+            .collection("usuarios").document(uid).get()
+            .addOnSuccessListener { doc ->
+                val foto = doc.getString("fotoPerfil")
+                if (!foto.isNullOrEmpty()) {
+                    Glide.with(this)
+                        .load(foto)
+                        .circleCrop()
+                        .placeholder(R.mipmap.ic_launcher_round)
+                        .into(binding.imgFotoPerfil)
+                }
+            }
+    }
+
 
 }

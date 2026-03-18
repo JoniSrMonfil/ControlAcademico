@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp"
+    android:background="@color/dark_surface">
 
     <EditText
         android:id="@+id/etNombreMateria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre de la materia"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="16dp"/>
 
     <EditText
         android:id="@+id/etHorario"
