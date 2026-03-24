@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_bg">
+    android:background="?android:attr/windowBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:text="Crear Cuenta"
             android:textSize="26sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/color_text_primary"
             android:layout_marginBottom="8dp"/>
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Completa tus datos"
             android:textSize="13sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/color_text_secondary"
             android:layout_marginBottom="40dp"/>
 
         <EditText
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:text="Volver al login"
             android:background="@android:color/transparent"
-            android:textColor="@color/accent_cyan"/>
+            android:textColor="@color/color_primary"/>
 
     </LinearLayout>
 </ScrollView>

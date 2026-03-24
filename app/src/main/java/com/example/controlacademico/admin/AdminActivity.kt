@@ -4,27 +4,22 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.controlacademico.BaseActivity
 import com.example.controlacademico.MainActivity
 import com.example.controlacademico.R
 import com.example.controlacademico.databinding.ActivityAdminBinding
-import com.example.controlacademico.model.Materia
 import com.example.controlacademico.model.Usuario
 import com.example.controlacademico.prefs.Prefs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
-import com.bumptech.glide.Glide
-import com.google.firebase.storage.FirebaseStorage
+import com.example.controlacademico.SettingsActivity
 
 
-class AdminActivity : AppCompatActivity() {
+class AdminActivity : BaseActivity() {
 
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -39,6 +34,9 @@ class AdminActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminBinding.inflate(layoutInflater)
+        binding.btnAjustes.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
         setContentView(binding.root)
 
         db = FirebaseFirestore.getInstance()
@@ -74,6 +72,7 @@ class AdminActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+
     }
 
     private fun mostrarDialogoUsuarios() {

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_bg">
+    android:background="?android:attr/windowBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/dark_surface"
+            android:background="@color/color_surface"
             android:orientation="horizontal"
             android:padding="20dp"
             android:gravity="center_vertical"
@@ -44,14 +44,14 @@
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"/>
+                    android:textColor="@color/color_text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Administrador"
                     android:textSize="12sp"
-                    android:textColor="@color/accent_cyan"/>
+                    android:textColor="@color/color_primary"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -88,14 +88,14 @@
                     android:text="Gestionar Usuarios"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"/>
+                    android:textColor="@color/color_text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cambiar roles de usuarios"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/color_text_secondary"/>
             </LinearLayout>
 
             <TextView
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:text="›"
                 android:textSize="24sp"
-                android:textColor="@color/accent_cyan"/>
+                android:textColor="@color/color_primary"/>
         </LinearLayout>
 
         <!-- Card Crear Materia -->
@@ -139,14 +139,14 @@
                     android:text="Crear Materia"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"/>
+                    android:textColor="@color/color_text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Agregar nueva asignatura"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/color_text_secondary"/>
             </LinearLayout>
 
             <TextView
@@ -154,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:text="›"
                 android:textSize="24sp"
-                android:textColor="@color/accent_cyan"/>
+                android:textColor="@color/color_primary"/>
         </LinearLayout>
 
         <!-- Card Ver Materias -->
@@ -190,14 +190,14 @@
                     android:text="Ver Materias"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"/>
+                    android:textColor="@color/color_text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Listado completo"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/color_text_secondary"/>
             </LinearLayout>
 
             <TextView
@@ -205,7 +205,7 @@
                 android:layout_height="wrap_content"
                 android:text="›"
                 android:textSize="24sp"
-                android:textColor="@color/accent_cyan"/>
+                android:textColor="@color/color_primary"/>
         </LinearLayout>
 
         <!-- Card Asignar -->
@@ -241,14 +241,14 @@
                     android:text="Asignar Profesor y Alumnos"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"/>
+                    android:textColor="@color/color_text_primary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Vincular a una materia"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:textColor="@color/color_text_secondary"/>
             </LinearLayout>
 
             <TextView
@@ -256,7 +256,57 @@
                 android:layout_height="wrap_content"
                 android:text="›"
                 android:textSize="24sp"
-                android:textColor="@color/accent_cyan"/>
+                android:textColor="@color/color_primary"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnAjustes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_card"
+            android:orientation="horizontal"
+            android:padding="18dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:text="⚙️"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:layout_marginEnd="14dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ajustes"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_text_primary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cambiar tema de la app"
+                    android:textSize="12sp"
+                    android:textColor="@color/color_text_secondary"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="›"
+                android:textSize="24sp"
+                android:textColor="@color/color_primary"/>
         </LinearLayout>
 
         <!-- Botón cerrar sesión -->
@@ -265,7 +315,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cerrar Sesión"
-            style="@style/DarkButtonDanger"/>
+            style="@style/DangerButton"/>
 
     </LinearLayout>
 </ScrollView>

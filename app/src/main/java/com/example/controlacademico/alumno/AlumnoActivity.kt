@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.example.controlacademico.BaseActivity
 import com.example.controlacademico.MainActivity
 import com.example.controlacademico.databinding.ActivityAlumnoBinding
 import com.example.controlacademico.prefs.Prefs
@@ -14,12 +14,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
-import com.google.firebase.storage.FirebaseStorage
-import com.bumptech.glide.Glide
+import com.example.controlacademico.SettingsActivity
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.controlacademico.R
-class AlumnoActivity : AppCompatActivity() {
+class AlumnoActivity : BaseActivity() {
 
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -34,6 +32,9 @@ class AlumnoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlumnoBinding.inflate(layoutInflater)
+        binding.btnAjustes.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
         setContentView(binding.root)
 
         db = FirebaseFirestore.getInstance()
@@ -64,6 +65,8 @@ class AlumnoActivity : AppCompatActivity() {
         binding.btnCambiarFoto.setOnClickListener {
             pickImage.launch("image/*")
         }
+
+
     }
 
     private fun generarQR(uid: String) {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_bg">#0D0D0D</color>
+    <color name="color_surface">#1A1A2E</color>
+    <color name="color_card">#16213E</color>
+    <color name="color_primary">#4FC3F7</color>
+    <color name="color_text_primary">#E0E0E0</color>
+    <color name="color_text_secondary">#90CAF9</color>
+    <color name="color_danger">#FF5252</color>
+    <color name="color_danger_bg">#2A1A1A</color>
+    <color name="color_card_stroke">#1E3A5F</color>
+    <color name="color_input_stroke">#1E3A5F</color>
+    <color name="white">#FFFFFF</color>
+</resources>

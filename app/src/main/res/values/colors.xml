@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_bg">#0D0D0D</color>
-    <color name="dark_surface">#1A1A2E</color>
-    <color name="dark_card">#16213E</color>
-    <color name="accent_cyan">#4FC3F7</color>
-    <color name="text_primary">#E0E0E0</color>
-    <color name="text_secondary">#90CAF9</color>
-    <color name="danger_red">#FF5252</color>
-    <color name="white">#FFFFFF</color>
-    <color name="dark_danger_bg">#2A1A1A</color>
+    <color name="color_bg">#F0F4F8</color>
+    <color name="color_surface">#FFFFFF</color>
+    <color name="color_card">#E8EEF5</color>
+    <color name="color_primary">#1565C0</color>
+    <color name="color_text_primary">#1A1A2E</color>
+    <color name="color_text_secondary">#6B7A8D</color>
+    <color name="color_danger">#FF5252</color>
+    <color name="color_danger_bg">#FFEBEE</color> <color name="color_card_stroke">#D0D7E1</color> <color name="color_input_stroke">#C0C7D1</color> <color name="white">#FFFFFF</color>
 </resources>

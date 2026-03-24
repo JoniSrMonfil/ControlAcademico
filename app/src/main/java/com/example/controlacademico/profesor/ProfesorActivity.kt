@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.example.controlacademico.BaseActivity
 import com.example.controlacademico.MainActivity
 import com.example.controlacademico.databinding.ActivityProfesorBinding
 import com.example.controlacademico.prefs.Prefs
@@ -13,13 +13,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import com.google.firebase.storage.FirebaseStorage
-import com.bumptech.glide.Glide
+import com.example.controlacademico.SettingsActivity
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.controlacademico.R
 
-class ProfesorActivity : AppCompatActivity() {
+class ProfesorActivity : BaseActivity() {
 
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -43,6 +41,11 @@ class ProfesorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfesorBinding.inflate(layoutInflater)
+
+        binding.btnAjustes.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
         setContentView(binding.root)
 
         db = FirebaseFirestore.getInstance()
@@ -196,10 +199,21 @@ class ProfesorActivity : AppCompatActivity() {
                             .setTitle("Calificación de $nombreAlumno en $materiaNombre")
                             .setView(etCalificacion)
                             .setPositiveButton("Guardar") { _, _ ->
-                                val calificacion = etCalificacion.text.toString()
-                                if (calificacion.isNotEmpty()) {
-                                    guardarCalificacion(alumnoId, nombreAlumno, materiaId, materiaNombre, calificacion)
+                                val calificacionStr = etCalificacion.text.toString().trim()
+
+                                if (calificacionStr.isEmpty()) {
+                                    Toast.makeText(this, "Ingresa una calificación", Toast.LENGTH_SHORT).show()
+                                    return@setPositiveButton
                                 }
+
+                                val calificacion = calificacionStr.toIntOrNull()
+
+                                if (calificacion == null || calificacion < 0 || calificacion > 100) {
+                                    Toast.makeText(this, "La calificación debe ser entre 0 y 100", Toast.LENGTH_SHORT).show()
+                                    return@setPositiveButton
+                                }
+
+                                guardarCalificacion(alumnoId, nombreAlumno, materiaId, materiaNombre, calificacionStr)
                             }
                             .setNegativeButton("Cancelar", null)
                             .show()
@@ -215,24 +229,51 @@ class ProfesorActivity : AppCompatActivity() {
         materiaNombre: String,
         calificacion: String
     ) {
-        val datos = hashMapOf(
-            "alumnoId" to alumnoId,
-            "alumnoNombre" to nombreAlumno,
-            "materiaId" to materiaId,
-            "materiaNombre" to materiaNombre,
-            "calificacion" to calificacion.toInt()
-        )
-
-        db.collection("calificaciones").add(datos)
-            .addOnSuccessListener {
-                Toast.makeText(
-                    this,
-                    "Calificación guardada: $calificacion",
-                    Toast.LENGTH_SHORT
-                ).show()
+        // Primero verificar si ya existe una calificación para este alumno en esta materia
+        db.collection("calificaciones")
+            .whereEqualTo("alumnoId", alumnoId)
+            .whereEqualTo("materiaId", materiaId)
+            .get()
+            .addOnSuccessListener { docs ->
+                if (!docs.isEmpty) {
+                    // Ya existe — ACTUALIZAR en lugar de crear nuevo
+                    val documentoId = docs.documents[0].id
+                    db.collection("calificaciones").document(documentoId)
+                        .update("calificacion", calificacion.toInt())
+                        .addOnSuccessListener {
+                            Toast.makeText(
+                                this,
+                                "Calificación actualizada: $calificacion",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    // No existe — CREAR nuevo documento
+                    val datos = hashMapOf(
+                        "alumnoId" to alumnoId,
+                        "alumnoNombre" to nombreAlumno,
+                        "materiaId" to materiaId,
+                        "materiaNombre" to materiaNombre,
+                        "calificacion" to calificacion.toInt()
+                    )
+                    db.collection("calificaciones").add(datos)
+                        .addOnSuccessListener {
+                            Toast.makeText(
+                                this,
+                                "Calificación guardada: $calificacion",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Error al guardar", Toast.LENGTH_SHORT).show()
+                        }
+                }
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Error al guardar calificación", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error al verificar calificación", Toast.LENGTH_SHORT).show()
             }
     }
 
